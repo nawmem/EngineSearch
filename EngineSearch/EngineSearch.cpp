@@ -14,19 +14,25 @@ using namespace std;
 int main()
 {
 	ConverterJSON config_file = ConverterJSON();
-	for (auto& item : config_file.GetRequest())
-	{
-		std::cout << item << std::endl;
-	}
-	//for (std::string item_str : config_file.GetTextDocument())
+	//for (auto& item : config_file.GetRequest())
 	//{
-	//	std::cout << item_str << std::endl;
+	//	std::cout << item << std::endl;
 	//}
+	/*for (std::string item_str : config_file.GetTextDocument())
+	{
+		std::cout << item_str << std::endl;
+	}*/
+	std::vector<std::string> strww = config_file.GetTextDocument();
+	for (std::string strww_i : strww)
+	{
+		std::cout << strww_i << std::endl;
+	}
+	
 
 	InvertedIndex ii = InvertedIndex();
-	std::string word = "error1";
+	std::string word = "dda";
 	std::vector<std::string> words = { "Error1", "erroor1", "error1" };
-	ii.UpdateDocumentBase(words);
+	ii.UpdateDocumentBase(strww);
 	std::vector<Entry> entrys = ii.GetWordCount(word);
 	for (auto item_entry : entrys)
 	{

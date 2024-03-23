@@ -4,30 +4,60 @@
 
 #include "../src/ConverterJSON.h"
 
+
+
 std::vector<std::string> ConverterJSON::GetTextDocument()
 {
-	std::vector<std::string> data_files;
-	std::ifstream config_prj(this->src_config);
+	std::string word;
+	std::string tmp_str;
+	std::vector<std::string> words_files; // список который будем возвращать
+
+	// считываем из конфига пути файлов со словами
+	std::ifstream config_prj(this->dir_prj + this->src_config); 
 	json files = json::parse(config_prj);
-	for (auto item_file : files["files"])
+	config_prj.close();
+
+	for (std::string item_file : files["files"])
 	{
-		data_files.push_back(item_file);
+		// т.к. разрабытвал сначала в клионе и компилятор был mingw то с путями небыло проблем
+		// в Visual Studio Comunity нужно прописывать виндовые слеши и полные пути к папкам
+		// меняем слеш / на \\
+
+		for (auto& item_ch : item_file)
+		{
+			if (item_ch == '/') item_ch = '\\';
+		}
+
+		// составляем путь для файла в папке resources
+		std::string link_file = this->dir_prj + item_file;
+		std::ifstream read_file_res(link_file);
+
+		// считываем данные из файлов и заполняем список слов
+		tmp_str = "";
+		while (read_file_res >> word)
+		{
+			if (tmp_str.size() == 0) tmp_str += word;
+			else tmp_str += (" " + word);
+		}
+		words_files.push_back(tmp_str);
+		read_file_res.close();
 	}
 
-	config_prj.close();
-	return data_files;
+	return words_files;
 }
 
 int ConverterJSON::GetResponseLimit()
 {
-	std::ifstream config_prj(this->src_config);
+	// считываем из конфига максимальное кол-во запросов
+	std::ifstream config_prj(this->dir_prj + this->src_config);
 	json count_response = json::parse(config_prj);
 	return count_response["config"]["max_response"];
 }
 
 std::vector<std::string> ConverterJSON::GetRequest()
 {
-	std::ifstream requests_prj(this->src_request);
+	// считываем запросы из файла реквест
+	std::ifstream requests_prj(this->dir_prj + this->src_request);
 	json requests = json::parse(requests_prj);
 	return requests["requests"];
 }

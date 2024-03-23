@@ -12,7 +12,8 @@ using json = nlohmann::json;
 
 void InvertedIndex::UpdateDocumentBase(std::vector<std::string> text_files_input) {
 
-    size_t count_files = text_files_input.size(); // колличество файлов в которые нужно прогнать
+    // получаем кол-во слов
+    size_t count_files = text_files_input.size(); 
     std::vector<std::thread> threads;
     for (std::string in_text: text_files_input)
     {
