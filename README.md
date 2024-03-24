@@ -1,5 +1,8 @@
 # EngineSearch
 
+Download the repository, open cmd (Windows), \
+go to the directory where the repository was  \
+uploaded and perform the following steps below \
 
 ... \repos > cd EngineSearch/build \
 ... \repos\EngineSearch\build> cmake cmake -DCMAKE_BUILD_TYPE=Debug .. \
