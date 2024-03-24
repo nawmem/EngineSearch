@@ -13,7 +13,7 @@ uploaded and perform the following steps below
 ### We enter it in the console 
 ... \repos\EngineSearch\build\EngineSearch\Debug> EngineSearch.exe 
 
-##example output: 
+### example output: 
 
 WORD - a: \
 doc_id - 3: count -1 \
