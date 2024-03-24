@@ -8,9 +8,9 @@ uploaded and perform the following steps below
 ... \repos\EngineSearch\build> cmake cmake -DCMAKE_BUILD_TYPE=Debug .. \
 ... \repos\EngineSearch\build> cmake --build . 
 
-### Next, go to the directory \
-... \repos\EngineSearch\build> cd EngineSearch/Debug \
-### We enter it in the console \
+### Next, go to the directory 
+... \repos\EngineSearch\build> cd EngineSearch/Debug 
+### We enter it in the console 
 ... \repos\EngineSearch\build\EngineSearch\Debug> EngineSearch.exe 
 
 ##example output: 
