@@ -7,10 +7,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Entry.h"
 #include <map>
+#include <thread>
+#include <mutex>
+#include "../src/Entry.h"
 class InvertedIndex {
 private:
+    std::mutex m_docs;
     std::vector<std::string> docs; // содержимое файлов
     std::map<std::string, std::vector<Entry>> freq_dictionary; // список вхождений с частотой слов
 public:
@@ -28,6 +31,11 @@ public:
      * @return список вхождений с частотой слов
      */
     std::vector<Entry> GetWordCount(std::string word);
+
+    std::map<std::string, std::vector<Entry>> getFreqDictionary()
+    {
+        return this->freq_dictionary;
+    }
 };
 
 

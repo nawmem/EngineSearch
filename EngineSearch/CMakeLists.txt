@@ -9,7 +9,7 @@ add_executable (
 	"src/InvertedIndex.h" "include/InvertedIndex.cpp"
 	"src/Entry.h" "include/Entry.cpp"
 	"src/ConverterJSON.h" "include/ConverterJSON.cpp"
-)
+ "include/SearchServer.cpp" "src/SearchServer.h")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET EngineSearch PROPERTY CXX_STANDARD 20)

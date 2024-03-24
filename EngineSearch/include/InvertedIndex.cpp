@@ -5,9 +5,10 @@
 
 #include "../src/InvertedIndex.h"
 #include <fstream>
-#include <thread>
 #include <sstream>
 #include "nlohmann/json.hpp"
+#include "../src/Entry.h"
+
 using json = nlohmann::json;
 
 void InvertedIndex::UpdateDocumentBase(std::vector<std::string> text_files_input) {
@@ -17,10 +18,12 @@ void InvertedIndex::UpdateDocumentBase(std::vector<std::string> text_files_input
     std::vector<std::thread> threads;
     for (std::string in_text: text_files_input)
     {
+        this->m_docs.lock();
         threads.push_back(std::thread([this](std::string file_text){
             // открываем файл
             this->docs.push_back(file_text);
         }, in_text));
+        this->m_docs.unlock();
     }
 
     // ждем завершения потоков
