@@ -15,64 +15,73 @@ void InvertedIndex::UpdateDocumentBase(std::vector<std::string> text_files_input
 
     // получаем кол-во слов
     size_t count_files = text_files_input.size(); 
-    std::vector<std::thread> threads;
+    std::vector<std::thread> threads; // вектор потоков
     for (std::string in_text: text_files_input)
     {
-        this->m_docs.lock();
-        threads.push_back(std::thread([this](std::string file_text){
-            // открываем файл
-            this->docs.push_back(file_text);
-        }, in_text));
-        this->m_docs.unlock();
+        this->docs.push_back(in_text);
+       
     }
 
-    // ждем завершения потоков
-    for (int i = 0; i < count_files; i++)
-    {
-        threads[i].join();
-    }
+    
 
     // перебираем коллекцию this->docs и ищем соответсвие в this->freq_dictionary
     // составляем список уникальных слов в документе и их колличество
-    for (int i = 0; i < this->docs.size(); ++i) {
+    for (int i = 0; i < this->docs.size(); ++i) 
+    {
         std::stringstream str;
-        str << this->docs[i];
         std::string word;
-        while (str >> word)
+        this->m_docs.lock();
+        std::thread fd_thread([this, &str, &word, &i]()
         {
-            // поиск ключа по слову
-            if (this->freq_dictionary.find(word) != this->freq_dictionary.end())
+            // открываем файл
+
+            str << this->docs[i];
+            while (str >> word)
             {
-                bool is_item_dict = false;
-                Entry *num_iter_dict;
-                for ( int j = 0; j < this->freq_dictionary[word].size(); j++)
+                // поиск ключа по слову
+                if (this->freq_dictionary.find(word) != this->freq_dictionary.end())
                 {
-                    if (this->freq_dictionary[word][j].doc_id == i)
+                    bool is_item_dict = false;
+                    Entry *num_iter_dict;
+                    for ( int j = 0; j < this->freq_dictionary[word].size(); j++)
                     {
-                        is_item_dict = true;
-                        num_iter_dict = &this->freq_dictionary[word][j];
-                        break;
+                        if (this->freq_dictionary[word][j].doc_id == i)
+                        {
+                            is_item_dict = true;
+                            num_iter_dict = &this->freq_dictionary[word][j];
+                            break;
+                        }
                     }
-                }
-                if (is_item_dict)
-                {
-                    num_iter_dict->count++;
+                    if (is_item_dict)
+                    {
+                        num_iter_dict->count++;
+                    }
+                    else
+                    {
+                        Entry add_new_entry = {static_cast<size_t>(i), 1};
+                        this->freq_dictionary[word].push_back(add_new_entry);
+                    }
+
                 }
                 else
                 {
-                    Entry add_new_entry = {static_cast<size_t>(i), 1};
-                    this->freq_dictionary[word].push_back(add_new_entry);
+                    Entry new_entry = {static_cast<size_t>(i), 1};
+                    this->freq_dictionary.insert({word, {new_entry}});
                 }
 
             }
-            else
-            {
-                Entry new_entry = {static_cast<size_t>(i), 1};
-                this->freq_dictionary.insert({word, {new_entry}});
-            }
 
-        }
+        });
+
+        fd_thread.join();
+        this->m_docs.unlock();
+        // ждем завершения потоков
+        
     }
+  /*  for (int i = 0; i < threads.size(); i++)
+    {
+        threads[i].join();
+    }*/
 
 }
 

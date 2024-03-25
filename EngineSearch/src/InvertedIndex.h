@@ -13,8 +13,8 @@
 #include "../src/Entry.h"
 class InvertedIndex {
 private:
-    std::mutex m_docs;
     std::vector<std::string> docs; // содержимое файлов
+    std::mutex m_docs;
     std::map<std::string, std::vector<Entry>> freq_dictionary; // список вхождений с частотой слов
 public:
     InvertedIndex() = default;

@@ -19,8 +19,8 @@ std::vector<std::string> ConverterJSON::GetTextDocument()
 
 	for (std::string item_file : files["files"])
 	{
-		// т.к. разрабытвал сначала в клионе и компилятор был mingw то с путями небыло проблем
-		// в Visual Studio Comunity нужно прописывать виндовые слеши и полные пути к папкам
+		// т.к. разрабытвал сначала в Clion и компилятор был mingw то с путями небыло проблем
+		// в Visual Studio Comunity нужно прописывать виндовые слеши и полные пути
 		// меняем слеш / на \\
 
 		for (auto& item_ch : item_file)
