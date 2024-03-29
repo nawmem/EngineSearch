@@ -4,8 +4,8 @@
 
 #include "EngineSearch.h"
 #include <nlohmann/json.hpp>
-#include "src/InvertedIndex.h"
-#include "src/ConverterJSON.h"
+#include "include/InvertedIndex.h"
+#include "include/ConverterJSON.h"
 
 using json = nlohmann::json;
 

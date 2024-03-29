@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <gtest/gtest.h>
-#include "../src/Entry.h"
-#include "../src/InvertedIndex.h"
+#include "../include/Entry.h"
+#include "../include/InvertedIndex.h"
 
 void TestInvertedIndexFunctionality(
 	const std::vector<std::string>& docs,

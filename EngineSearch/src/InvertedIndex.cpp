@@ -1,13 +1,12 @@
-#include "../src/InvertedIndex.h"
 //
 // Created by user on 13.02.2024.
 //
 
-#include "../src/InvertedIndex.h"
+#include "../include/InvertedIndex.h"
 #include <fstream>
 #include <sstream>
 #include "nlohmann/json.hpp"
-#include "../src/Entry.h"
+#include "../include/Entry.h"
 
 using json = nlohmann::json;
 

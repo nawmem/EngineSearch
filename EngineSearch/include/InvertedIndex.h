@@ -10,7 +10,7 @@
 #include <map>
 #include <thread>
 #include <mutex>
-#include "../src/Entry.h"
+#include "../include/Entry.h"
 class InvertedIndex {
 private:
     std::vector<std::string> docs; // содержимое файлов

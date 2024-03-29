@@ -10,11 +10,23 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_executable(EngineSearchTest main_test.cpp)
+include_directories(
+	${CMAKE_SOURCE_DIR}/include
+	${CMAKE_SOURCE_DIR}/nlohmann_json/include)
+
+
+add_executable(
+	EngineSearchTest
+	${CMAKE_SOURCE_DIR}/EngineSearch/src/ConverterJSON.cpp
+	${CMAKE_SOURCE_DIR}/EngineSearch/src/Entry.cpp
+	${CMAKE_SOURCE_DIR}/EngineSearch/src/InvertedIndex.cpp
+	${CMAKE_SOURCE_DIR}/EngineSearch/src/SearchServer.cpp
+	main_test.cpp)
 
 target_link_libraries(
 	EngineSearchTest
 	GTest::gtest_main
+	nlohmann_json::nlohmann_json
 )
 include(GoogleTest)
 gtest_discover_tests(EngineSearchTest)
