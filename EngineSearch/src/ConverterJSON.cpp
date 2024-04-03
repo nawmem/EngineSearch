@@ -3,6 +3,7 @@
 //
 
 #include "../include/ConverterJSON.h"
+#include "nlohmann/json.hpp"
 
 
 
@@ -11,7 +12,6 @@ std::vector<std::string> ConverterJSON::GetTextDocument()
 	std::string word;
 	std::string tmp_str;
 	std::vector<std::string> words_files; // список который будем возвращать
-
 	// считываем из конфига пути файлов со словами
 	std::ifstream config_prj(this->dir_prj + this->src_config); 
 	json files = json::parse(config_prj);

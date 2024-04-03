@@ -77,11 +77,6 @@ void InvertedIndex::UpdateDocumentBase(std::vector<std::string> text_files_input
         // ждем завершения потоков
         
     }
-  /*  for (int i = 0; i < threads.size(); i++)
-    {
-        threads[i].join();
-    }*/
-
 }
 
 std::vector<Entry> InvertedIndex::GetWordCount(std::string word)

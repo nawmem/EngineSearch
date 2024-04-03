@@ -6,6 +6,7 @@
 #include <nlohmann/json.hpp>
 #include "include/InvertedIndex.h"
 #include "include/ConverterJSON.h"
+#include "include/SearchServer.h"
 
 using json = nlohmann::json;
 
@@ -13,42 +14,34 @@ using namespace std;
 
 int main()
 {
-	ConverterJSON config_file = ConverterJSON();
-	//for (auto& item : config_file.GetRequest())
-	//{
-	//	std::cout << item << std::endl;
-	//}
-	/*for (std::string item_str : config_file.GetTextDocument())
-	{
-		std::cout << item_str << std::endl;
-	}*/
-	std::vector<std::string> strww = config_file.GetTextDocument();
-	for (std::string strww_i : strww)
-	{
-		std::cout << strww_i << std::endl;
-	}
+	// получаем объект данных из файлов json в директории configs
+	ConverterJSON converter_json = ConverterJSON();
+	std::vector<std::string> all_text_doc = converter_json.GetTextDocument();
 	
+	// Объект с данными о индексировании документов
+	InvertedIndex* inverted_index = new InvertedIndex();
+	inverted_index->UpdateDocumentBase(all_text_doc);
 
-	InvertedIndex ii = InvertedIndex();
-	std::string word = "dda";
-	std::vector<std::string> words = { "Error1", "erroor1", "error1" };
-	ii.UpdateDocumentBase(strww);
-	std::vector<Entry> entrys = ii.GetWordCount(word);
-	for (auto item_entry : entrys)
+	// Получаем вектор строк запросов из файла requests.json в директории configs
+	// чтобы далее передать в сервер поиска слов в отиндексированнымх документах
+	std::fstream requests_json("C:\\cpp\\EngineSearch\\EngineSearch\\configs\\requests.json");
+	std::vector<std::string> words_request;
+	if (requests_json.is_open())
 	{
-		std::cout << item_entry.doc_id << " - " << item_entry.count << std::endl;
-	}
+		json read_word_req = json::parse(requests_json);
 
-	std::cout << "-----------------" << std::endl;
-	std::map<std::string, std::vector<Entry>> m_fd = ii.getFreqDictionary();
-	for (auto item_df : m_fd)
-	{
-		std::cout << "WORD - " << item_df.first << ": " << std::endl;
-		for (auto item_e : item_df.second)
+		for (std::string str_words_req : read_word_req["requests"])
 		{
-			std::cout << "doc_id - " << item_e.doc_id << ": count -" << item_e.count << std::endl;
+			words_request.push_back(str_words_req);
 		}
 	}
+
+	// Объект индексации документов, в конструктор которого передаем указатель на объект inverted_index
+	SearchServer search_server(inverted_index);
+
+	search_server.search(words_request);
+
+
 
 	return 0;
 }

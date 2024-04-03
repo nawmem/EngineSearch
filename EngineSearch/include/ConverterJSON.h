@@ -13,7 +13,7 @@ using json = nlohmann::json;
 
 
 class ConverterJSON {
-    std::string dir_prj = "C:\\Users\\User\\source\\repos\\EngineSearch\\EngineSearch\\";
+    std::string dir_prj = "C:\\cpp\\EngineSearch\\EngineSearch\\"; //
     std::string src_config = "configs\\config.json";
     std::string src_request = "configs\\requests.json";
     std::string src_answers = "configs\\answers.json";
