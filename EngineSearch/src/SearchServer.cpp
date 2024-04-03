@@ -17,45 +17,48 @@ int sort_list_word_asc
 )
 {
 	int start_pos = start;
-	int end_pos = end - 1;
+	int end_pos = end;
 	int middle = (end - start) / 2 + start;
 	int count_find_word = 0; // колличество раз когда вставляемое слово встретилось в документах
 	int count_freq_word = 0; // колличество раз когда сравнимое слово встретилось в документах
 	int count_freq_word_middle = 0; // колличество раз когда слово из середины встретилось в документах
 	for (auto item_word : freq_dict[insert_word]) count_find_word += static_cast<int>(item_word.count);
 	
-
+	// если список пустой то пушим в него первый элемент
 	if (sort_list_word.size() == 0)
 	{
 		sort_list_word.push_back(insert_word);
 		return 0;
 	}
-	else
-	{
-		count_freq_word_middle = 0;
-		std::string str_name = sort_list_word[middle];
-		for (auto item_word_middle : freq_dict[str_name])
+	else 
+		// тут можем начать высчитывать кол-во совпадений среднего элемента из списка
+		// для дальнейшего сравнения с тем что нужно вставить
+		for (auto item_word_middle : freq_dict[sort_list_word[middle]])
 			count_freq_word_middle += static_cast<int>(item_word_middle.count);
-	}
 
 	for (auto item_freq_word : freq_dict[sort_list_word[start_pos]]) count_freq_word += static_cast<int>(item_freq_word.count);
-	if (start_pos == end_pos)
+	
+	if (start_pos == end_pos) // тут сравниваем с одним элементом оставшимся от деления массива на пары
 	{
 		if (count_freq_word <= count_find_word) sort_list_word.insert(sort_list_word.begin() + start_pos + 1, insert_word);
 		else if (count_freq_word >= count_find_word) sort_list_word.insert(sort_list_word.begin() + start_pos, insert_word);
 		return 0;
 	}
-	else if ((start_pos + 1) == end_pos)
+	else if ((start_pos + 1) == end_pos) // тут работаем с двумя эелементами оставшимися от деления
 	{
-		if (count_freq_word >= count_find_word) sort_list_word.insert(sort_list_word.begin() + start_pos + 1, insert_word);
-		else if (count_freq_word <= count_find_word) sort_list_word.insert(sort_list_word.begin() + start_pos + 2, insert_word);
+		if (count_freq_word >= count_find_word) sort_list_word.insert(sort_list_word.begin() + start_pos, insert_word);
+		else if (count_freq_word <= count_find_word) sort_list_word.insert(sort_list_word.begin() + start_pos + 1, insert_word);
 		return 0;
 	}
-	else if (count_freq_word_middle == count_find_word)
+	else if (count_freq_word_middle == count_find_word) // вдруг у нас попался равный эелемент то вставляем после него
 	{
 		sort_list_word.insert(sort_list_word.begin() + start_pos + 1, insert_word);
 		return 0;
 	}
+	// ниже в обоих вариантах сравниваем кол-во совпадений центрального элемента
+	//  с кол-вом того слова которое нужно вставить
+	// если оно больше или меньше то вызываем рикурсию чтобы разделить массив на пополам
+	// и продолжить поиски
 	else if (count_freq_word_middle < count_find_word)
 		sort_list_word_asc(freq_dict, sort_list_word, insert_word, middle, end_pos);
 	else if (count_freq_word_middle > count_find_word)
@@ -84,8 +87,9 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
 		{
 			sort_list_word_asc(freq_dictionary, uniq_list_words[req_id], req_word, 0, uniq_list_words[req_id].size());
 		}
-		
+		auto tmp = uniq_list_words;
 	}
+	//
 	
 	return { "asdasd", "asdasd" };
 }
