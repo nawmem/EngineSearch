@@ -61,52 +61,60 @@ std::vector<std::string> ConverterJSON::GetRequest()
 	json requests = json::parse(requests_prj);
 	return requests["requests"];
 }
-// а тут происходит магия перевоплащения мапы в json ))
+
+
+// а тут происходит магия перевоплащения в json )) и сохранение результатов в answers.json
 void ConverterJSON::PutAnswer(std::vector<std::vector<std::pair<int, float>>> answer)
 {
 	json answers = { };		// это результат который будем записывать в answers.json
-
 	for (int i = 0; i < answer.size(); i++)
 	{
-		auto& request = answers[i];
+		auto& request = answer[i];
 		std::string req_id = "request_";
 		if (i >= 0 && i < 10) req_id += ("00" + std::to_string(i + 1));
 		else if (i >= 10 && i <= 99) req_id += ("0" + std::to_string(i + 1));
 		else if (i >= 99 && i <= 999) req_id += ("" + std::to_string(i + 1));
 
 		// тут определеяем если найдены документы или нет и записывапем в поле result (false или true)
+
 		if (request.size() == 0) answers["answers"][req_id]["result"] = "false";
 		else answers["answers"][req_id]["result"] = "true";
-		auto iii = request;
+
 		// если найдено больше одного документа
 		// то создаем лист relative
-		//if (request.size() > 1)
-		//{
-		//	for (auto& result_doc : request)
-		//	{
-		//		answers["answers"][req_id]["relevance"].push_back({ {"docid", result_doc.doc_id} });
-		//		answers["answers"][req_id]["relevance"].push_back({ {"rank", result_doc.rank} });
-		//		
-		//		long int calc_result_rank = result_doc.rank * 1000000;
-		//		size_t doc_position = answers["answers"][req_id]["relevance"].size();
-		//		json* edit_rank = &answers["answers"][req_id]["relevance"][doc_position - 1]["rank"];
-		//		double add_rank = *edit_rank;
-		//		// приводим в б0жеский вид. чтобы 1 была не 1.0
-		//		if (calc_result_rank > 999999) *edit_rank = static_cast<int>(*edit_rank);
-		//		// обрезаем до 6 знаков после запятой
-		//		else answers["answers"][req_id]["relevance"][doc_position - 1]["rank"] = std::trunc(add_rank * 1000000000) / 1000000000.0000000000f; ;
-		//	}
-		//}
-		//// если всего один документ то просто добавляем в массив с названием запроса
-		//else if (request.second.size() == 1)
-		//{
-		//	for (auto one_doc : request.second)
-		//	{
-		//		answers["answers"][req_id]["docid"] = one_doc.doc_id;
-		//		answers["answers"][req_id]["rank"] = one_doc.rank;
 
-		//	}
-		//}
+		if (request.size() > 1)
+		{
+			for (auto& result_doc : request)
+			{
+				answers["answers"][req_id]["relevance"].push_back({ {"docid", result_doc.first} });
+				answers["answers"][req_id]["relevance"].push_back({ {"rank", result_doc.second} });
+				
+				long int calc_result_rank = result_doc.second * 1000000;
+				size_t doc_position = answers["answers"][req_id]["relevance"].size();
+				json* edit_rank = &answers["answers"][req_id]["relevance"][doc_position - 1]["rank"];
+				double add_rank = *edit_rank;
+				// приводим в б0жеский вид. чтобы 1 была не 1.0
+				if (calc_result_rank > 999999) *edit_rank = static_cast<int>(*edit_rank);
+				// обрезаем до 6 знаков после запятой
+				else answers["answers"][req_id]["relevance"][doc_position - 1]["rank"] = std::trunc(add_rank * 1000000000) / 1000000000.0000000000f; ;
+			}
+		}
+		// если всего один документ то просто добавляем в массив с названием запроса
+		else if (request.size() == 1)
+		{
+			for (auto one_doc : request)
+			{
+				answers["answers"][req_id]["docid"] = one_doc.first;
+				answers["answers"][req_id]["rank"] = one_doc.second;
+
+			}
+		}
+
 			
 	}
+								
+	std::ofstream input_answers("C:\\cpp\\EngineSearch\\EngineSearch\\configs\\answers.json", std::ios::out);
+	if (input_answers.is_open()) input_answers << answers;
+	input_answers.close();
 }

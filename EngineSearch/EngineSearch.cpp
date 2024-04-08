@@ -38,8 +38,19 @@ int main()
 
 	// Объект индексации документов, в конструктор которого передаем указатель на объект inverted_index
 	SearchServer search_server(inverted_index);
-	search_server.Search(words_request);
-	//converter_json.PutAnswer(search_server.Search(words_request));
+	auto all_request = search_server.Search(words_request);
+	std::vector<std::vector<std::pair<int, float>>> put_answer;
+	for (int i = 0; i < all_request.size(); i++)
+	{
+		auto& current_req = all_request[i];
+		put_answer.push_back({});
+		for (auto& current_doc: current_req)
+		{
+			put_answer[i].push_back(std::pair<int, float>( { current_doc.doc_id, current_doc.rank }));
+		}
+	}
+
+	converter_json.PutAnswer(put_answer);
 
 
 

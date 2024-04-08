@@ -72,13 +72,13 @@ int sortListWordAsc
 
 
 
-void resultSortRelative(std::vector<RelativeIndex>& relevance, int start, int end)
+void sortRelative(std::vector<RelativeIndex>& relevance, int start, int end)
 {
 	if (start == end) return;					
 	int middle = (start + end) / 2;				// определяем середину списка
 												// и рекурсивно вызываем функцию сортировки для каждой половины
-	resultSortRelative(relevance, start, middle);
-	resultSortRelative(relevance, middle + 1, end);
+	sortRelative(relevance, start, middle);
+	sortRelative(relevance, middle + 1, end);
 	std::vector<RelativeIndex> tmp_relevance;
 	int start_left_point = start;				// начало левого списка
 	int start_right_point = middle + 1;			// начало правого списка
@@ -185,7 +185,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::Search(const std::vector<s
 			}
 		}
 		// сортируем relevance лист
-		resultSortRelative(relevance, 0, relevance.size());
+		sortRelative(relevance, 0, relevance.size());
 
 
 		// тут это все дело вставляем в std::map<std::string,std::vector<RelativeIndex>> requests чтобы потом перобразовать в json
@@ -205,5 +205,3 @@ std::vector<std::vector<RelativeIndex>> SearchServer::Search(const std::vector<s
 ;
 	return requests;
 }
-
-
