@@ -40,20 +40,20 @@ void InvertedIndex::UpdateDocumentBase(std::vector<std::string> text_files_input
                 // поиск ключа по слову
                 if (this->freq_dictionary.find(word) != this->freq_dictionary.end())
                 {
-                    bool is_item_dict = false;
+                    bool is_dict = false;
                     Entry *num_iter_dict;
                     for ( int j = 0; j < this->freq_dictionary[word].size(); j++)
                     {
                         if (this->freq_dictionary[word][j].doc_id == i)
                         {
-                            is_item_dict = true;
+                            is_dict = true;
                             num_iter_dict = &this->freq_dictionary[word][j];
                             break;
                         }
                     }
-                    if (is_item_dict)
+                    if (is_dict)
                     {
-                        num_iter_dict->count++;
+                        num_iter_dict->count++; // если совпадения были в документе то инкриментируем
                     }
                     else
                     {
@@ -81,11 +81,11 @@ void InvertedIndex::UpdateDocumentBase(std::vector<std::string> text_files_input
 
 std::vector<Entry> InvertedIndex::GetWordCount(std::string word)
 {
-    for (auto v_entry: this->freq_dictionary)
+    for (auto docs: this->freq_dictionary)
     {
-        if (v_entry.first == word)
+        if (docs.first == word)
         {
-            return v_entry.second;
+            return docs.second;
         }
     }
     return {{0, 0}};
