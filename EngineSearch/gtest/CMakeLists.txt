@@ -21,7 +21,7 @@ add_executable(
 	${CMAKE_SOURCE_DIR}/EngineSearch/src/Entry.cpp
 	${CMAKE_SOURCE_DIR}/EngineSearch/src/InvertedIndex.cpp
 	${CMAKE_SOURCE_DIR}/EngineSearch/src/SearchServer.cpp
-	main_test.cpp)
+	MainTest.cpp)
 
 target_link_libraries(
 	EngineSearchTest

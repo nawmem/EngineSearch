@@ -38,8 +38,8 @@ int main()
 
 	// Объект индексации документов, в конструктор которого передаем указатель на объект inverted_index
 	SearchServer search_server(inverted_index);
-
-	search_server.search(words_request);
+	search_server.Search(words_request);
+	//converter_json.PutAnswer(search_server.Search(words_request));
 
 
 

@@ -105,32 +105,29 @@ void resultSortRelative(std::vector<RelativeIndex>& relevance, int start, int en
 }
 
 
-std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string>& queries_input)
+std::vector<std::vector<RelativeIndex>> SearchServer::Search(const std::vector<std::string>& queries_input)
 {
-	std::map<std::string, std::vector<Entry>> freq_dictionary = _index->getFreqDictionary();
-	// карта уникальных слов запросов <слово, id запроса>
-	std::map<std::string, std::vector<std::string>> uniq_list_words;
+	std::map<std::string, std::vector<Entry>> freq_dictionary = _index->GetFreqDictionary();
+	// список уникальных слов запросов
+	std::vector<std::vector<std::string>> uniq_list_words;
 	std::string req_id = "";
 
 	for (int i = 0; i < queries_input.size(); i++)
 	{
 		std::stringstream str_req(queries_input[i]);
 		std::string req_word;
-		req_id = "request_";
-		if (i >= 0 && i < 10) req_id += ("00" + std::to_string(i + 1));
-		else if (i >= 10 && i <= 99) req_id += ("0" + std::to_string(i + 1));
-		else if (i >= 99 && i <= 999) req_id += ("" + std::to_string(i + 1));
-		uniq_list_words.insert({ req_id, {} });
 		// сортируем слова в порядке увеличения частоты встречаемости
+		uniq_list_words.push_back({});
 		while (str_req >> req_word)
 		{
-			sortListWordAsc(freq_dictionary, uniq_list_words[req_id], req_word, 0, uniq_list_words[req_id].size());
+			sortListWordAsc(freq_dictionary, uniq_list_words[i], req_word, 0, uniq_list_words[i].size());
 		}
 	}
 
+
+
 	size_t max_relevance_number = 0;											 // максимальное число совпадений для расчета относительной релевантности
-	json answers = { };															 // это результат который будем записывать в answers.json
-	std::map<std::string,std::vector<RelativeIndex>> requests;					 // список содержащий название запроса и список найденых документов
+	std::vector<std::vector<RelativeIndex>> requests;					 // список содержащий название запроса и список найденых документов
 	std::vector<RelativeIndex> relevance;										 // список найденых документов у отдельного запроса
 	std::vector<std::vector<RelativeIndex>> return_vector_relative_index = {};	 // вектор который будем возвращать в итоге 
 
@@ -138,7 +135,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
 	for (auto id_request : uniq_list_words) 
 	{
 		size_t count_doc = 0;
-		for (auto word_request : id_request.second) // получили слово из запроса
+		for (auto word_request : id_request) // получили слово из запроса
 		{
 			// считаем сколько документов получилось у всех слов одного запроса и так по каждому запросу
 			for (auto current_doc : freq_dictionary[word_request])
@@ -190,60 +187,23 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
 		// сортируем relevance лист
 		resultSortRelative(relevance, 0, relevance.size());
 
+
 		// тут это все дело вставляем в std::map<std::string,std::vector<RelativeIndex>> requests чтобы потом перобразовать в json
-		if (requests.find(id_request.first) == requests.end()) requests.insert({ id_request.first, relevance });
-		else requests[id_request.first] = relevance;
+		//if (requests.find(id_request.first) == requests.end()) requests.insert({ id_request.first, relevance });
+		//else requests[id_request.first] = relevance;
+		requests.push_back(relevance);
 		relevance.clear();
 	}	
-
 
 	std::vector<std::vector<RelativeIndex>> reuslt_relative;
 	 //высчитываем относительную релевантность
 	for (auto& current_req : requests)
 	{
-		for (auto& current_doc : current_req.second) current_doc.rank = current_doc.rank / max_relevance_number;
+		for (auto& current_doc : current_req) current_doc.rank = current_doc.rank / max_relevance_number;
 		max_relevance_number = 1; // скидываем максимальное кол-во совпадений
-		reuslt_relative.push_back(current_req.second);
 	}
-	
-	// а тут происходит магия перевоплащения мапы в json ))
-	for (auto& result_req : requests)
-	{
-		// тут определеяем если найдены документы или нет и записывапем в поле result (false или true)
-		if (result_req.second.size() == 0) answers["answers"][result_req.first]["result"] = "false";
-		else answers["answers"][result_req.first]["result"] = "true";
-		
-		// если найдено больше одного документа
-		// то создаем лист relative
-		if (result_req.second.size() > 1)
-		{
-			for (auto& result_doc : result_req.second)
-			{
-				answers["answers"][result_req.first]["relevance"].push_back({ {"docid", result_doc.doc_id} });
-				answers["answers"][result_req.first]["relevance"].push_back({ {"rank", result_doc.rank} });
-				
-				long int calc_result_rank = result_doc.rank * 1000000;
-				size_t doc_position = answers["answers"][result_req.first]["relevance"].size();
-				json* edit_rank = &answers["answers"][result_req.first]["relevance"][doc_position - 1]["rank"];
-				double add_rank = *edit_rank;
-				// приводим в б0жеский вид. чтобы 1 была не 1.0
-				if (calc_result_rank > 999999) *edit_rank = static_cast<int>(*edit_rank);
-				// обрезаем до 6 знаков после запятой
-				else answers["answers"][result_req.first]["relevance"][doc_position - 1]["rank"] = std::trunc(add_rank * 1000000000) / 1000000000.0000000000f; ;
-			}
-		}
-		// если всего один документ то просто добавляем в массив с названием запроса
-		else if (result_req.second.size() == 1)
-		{
-			for (auto one_doc : result_req.second)
-			{
-				answers["answers"][result_req.first]["docid"] = one_doc.doc_id;
-				answers["answers"][result_req.first]["rank"] = one_doc.rank;
-
-			}
-		}
-			
-	}
-
-	return reuslt_relative;
+;
+	return requests;
 }
+
+

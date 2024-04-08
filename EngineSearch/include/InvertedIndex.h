@@ -32,7 +32,7 @@ public:
      */
     std::vector<Entry> GetWordCount(std::string word);
 
-    std::map<std::string, std::vector<Entry>> getFreqDictionary()
+    std::map<std::string, std::vector<Entry>> GetFreqDictionary()
     {
         return this->freq_dictionary;
     }

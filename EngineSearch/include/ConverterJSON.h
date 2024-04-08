@@ -40,7 +40,7 @@ public:
     /**
      * Ложит в файл answer результат поисковых запросов
      */
-    void putAnswer(std::vector<std::vector<std::pair<int, float>>> answer);
+    void PutAnswer(std::vector<std::vector<std::pair<int, float>>> answer);
 };
 
 
