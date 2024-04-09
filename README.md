@@ -13,11 +13,21 @@ uploaded and perform the following steps below
 ### We enter it in the console 
 ... \repos\EngineSearch\build\EngineSearch\Debug> EngineSearch.exe 
 
+Without which the program will not work, read below. \
+
+There should definitely be files in the "configs" directory \
+- config.json \
+- request. \
+sjon answers file.The json will be created automatically so there is no need to create it.
+
+The "resources" directory should contain files with text, and word search will be essential in them. \
+They should be named the same as in the "files" field of the "config.json" file \
+In the "requests.json" file located in the "configs" directory, fill in the "requests" array with requests for them to be searched.
+
+
+If all the files are in place and they are filled in, the program will start successfully and the word "DONE" will appear on the screen and the line shown below will appear in the project directory in the "configs" directory in the "answers.json" file. \
+
 ### example output: 
-If all the files are in place that lie in the "resources" and "configs" directories, as well as in the "requests.json" file located in the "configs" directory, you have filled in the "requests" array with requests, then the program will run successfully and the word will appear on the screen "DONE"
-
-In the project directory "configs" in the file "answers.json" a line should appear which is shown below
-
 {"answers":{"request_001":{"relevance":[{"docid":0},{"rank":1},{"docid":2},{"rank":0.857142865},{"docid":3},{"rank":0.571428596},{"docid":1},{"rank":0.571428596}],"result":"true"},"request_002":{"docid":0,"rank":1.0,"result":"true"},"request_003":{"result":"false"}}}
 
 The End!!!

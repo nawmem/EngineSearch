@@ -13,53 +13,107 @@ std::vector<std::string> ConverterJSON::GetTextDocument()
 	std::string tmp_str;
 	std::vector<std::string> words_files; // список который будем возвращать
 	// считываем из конфига пути файлов со словами
+	json files;
 	std::ifstream config_prj(this->dir_prj + this->src_config); 
-	json files = json::parse(config_prj);
-	config_prj.close();
-
-	for (std::string item_file : files["files"])
+	if (config_prj.is_open())
 	{
-		// т.к. разрабытвал сначала в Clion и компил€тор был mingw то с пут€ми небыло проблем
-		// а сейчас в Visual Studio Comunity нужно прописывать виндовые слеши и полные пути
-		// мен€ем слеш / на \\
-
-		for (auto& item_ch : item_file)
+		files = json::parse(config_prj);
+		config_prj.close();
+		for (std::string current_file : files["files"])
 		{
-			if (item_ch == '/') item_ch = '\\';
-		}
+			// т.к. писал сначала в Clion и компил€тор был mingw то с пут€ми небыло проблем
+			// а сейчас в Visual Studio Comunity и нужно прописывать виндовые слеши и полные пути
+			// мен€ем слеш / на \\
 
-		// составл€ем путь дл€ файла в папке resources
-		std::string link_file = this->dir_prj + item_file;
-		std::ifstream read_file_res(link_file);
+			int count_char_slash = 0;
+			std::string file_name = "";
+			std::string file_path_req = "";
 
-		// считываем данные из файлов и заполн€ем список слов
-		tmp_str = "";
-		while (read_file_res >> word)
-		{
-			if (tmp_str.size() == 0) tmp_str += word;
-			else tmp_str += (" " + word);
+			for (int i = current_file.size(); i >= 0; i--)
+			{
+				auto& char_name_file = current_file[i];
+				if (char_name_file == '/')
+				{
+					count_char_slash++;
+					char_name_file = '\\';
+				}
+				if (count_char_slash < 1)
+					file_name.insert(file_name.begin(), char_name_file);
+				else
+					file_path_req.insert(file_path_req.begin(), char_name_file);
+			}
+
+			std::string path_resouces = this->dir_prj;
+			for (int i = this->dir_prj.size(); i >= 0; i--)
+			{
+				if (count_char_slash < 3)
+					path_resouces.erase(i, 1);
+				else
+				{
+					path_resouces += '\\\\';
+					break;
+				}
+
+				if (this->dir_prj[i] == '\\')
+					count_char_slash++;
+
+				
+			}
+			// составл€ем путь дл€ файла в папке resources
+			std::ifstream read_file_res(path_resouces + file_path_req + file_name);
+			if (read_file_res.is_open())
+			{
+				// считываем данные из файлов и заполн€ем список слов
+				tmp_str = "";
+				while (read_file_res >> word)
+				{
+					if (tmp_str.size() == 0) tmp_str += word;
+					else tmp_str += (" " + word);
+				}
+				words_files.push_back(tmp_str);
+				read_file_res.close();
+			}
+			else
+				throw ExeptNotFoundFile(file_name, path_resouces + file_path_req);
+
+			
 		}
-		words_files.push_back(tmp_str);
-		read_file_res.close();
+		return words_files;
 	}
-
+	else
+		throw ExeptNotFoundFile(this->src_config, this->dir_prj);
 	return words_files;
 }
 
 int ConverterJSON::GetResponseLimit()
 {
+	json count_response;
 	// считываем из конфига максимальное кол-во запросов
 	std::ifstream config_prj(this->dir_prj + this->src_config);
-	json count_response = json::parse(config_prj);
-	return count_response["config"]["max_response"];
+	if (config_prj.is_open())
+	{
+		count_response = json::parse(config_prj);
+		return count_response["config"]["max_response"];
+	}
+	else
+		throw ExeptNotFoundFile(this->src_config, this->dir_prj);
+	return 0;
 }
 
 std::vector<std::string> ConverterJSON::GetRequest()
 {
+	std::vector<std::string> requests;
 	// считываем запросы из файла реквест
 	std::ifstream requests_prj(this->dir_prj + this->src_request);
-	json requests = json::parse(requests_prj);
-	return requests["requests"];
+	if (requests_prj.is_open())
+	{
+		for (std::string current_req : json::parse(requests_prj)["requests"])
+			requests.push_back(current_req);
+	}
+	else
+		throw ExeptNotFoundFile(this->src_request, this->dir_prj);
+
+	return requests;
 }
 
 
@@ -114,7 +168,9 @@ void ConverterJSON::PutAnswer(std::vector<std::vector<std::pair<int, float>>> an
 			
 	}
 								
-	std::ofstream input_answers("C:\\cpp\\EngineSearch\\EngineSearch\\configs\\answers.json", std::ios::out);
+	std::ofstream input_answers(this->dir_prj + src_answers, std::ios::out);
 	if (input_answers.is_open()) input_answers << answers;
+	else
+		throw ExeptNotFoundFile(this->src_answers, this->dir_prj);
 	input_answers.close();
 }

@@ -9,14 +9,15 @@
 #include <vector>
 #include <fstream>
 #include "nlohmann/json.hpp"
+#include "ExeptNotFoundFile.h"
 using json = nlohmann::json;
 
 
 class ConverterJSON {
-    std::string dir_prj = "C:\\cpp\\EngineSearch\\EngineSearch\\"; //
-    std::string src_config = "configs\\config.json";
-    std::string src_request = "configs\\requests.json";
-    std::string src_answers = "configs\\answers.json";
+    std::string dir_prj = "C:\\cpp\\EngineSearch\\EngineSearch\\configs\\"; //
+    std::string src_config = "config.json";
+    std::string src_request = "requests.json";
+    std::string src_answers = "answers.json";
 public:
     ConverterJSON() = default;
 

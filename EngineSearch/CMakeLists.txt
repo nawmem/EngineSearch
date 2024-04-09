@@ -14,7 +14,7 @@ add_executable (
 	src/InvertedIndex.cpp
 	src/SearchServer.cpp
 	EngineSearch.cpp
-	 "include/RelativeIndex.h")
+	 "include/RelativeIndex.h" "include/ExeptNotFoundFile.h")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET EngineSearch PROPERTY CXX_STANDARD 20)
