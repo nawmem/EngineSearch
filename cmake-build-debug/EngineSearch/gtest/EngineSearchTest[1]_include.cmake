@@ -1,0 +1,5 @@
+if(EXISTS "C:/cpp/EngineSearch/cmake-build-debug/EngineSearch/gtest/EngineSearchTest[1]_tests.cmake")
+  include("C:/cpp/EngineSearch/cmake-build-debug/EngineSearch/gtest/EngineSearchTest[1]_tests.cmake")
+else()
+  add_test(EngineSearchTest_NOT_BUILT EngineSearchTest_NOT_BUILT)
+endif()

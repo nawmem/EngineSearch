@@ -1,0 +1,8 @@
+# ninja log v5
+6	1226	7344731690499009	EngineSearch/CMakeFiles/EngineSearch.dir/src/Entry.cpp.obj	728644b7be72039a
+21	4135	7344731719561290	EngineSearch/CMakeFiles/EngineSearch.dir/src/InvertedIndex.cpp.obj	3d1f6639232d1fa6
+9	4226	7344731720438955	EngineSearch/CMakeFiles/EngineSearch.dir/src/SearchServer.cpp.obj	e52889e99c038d42
+13	4398	7344731722204236	EngineSearch/CMakeFiles/EngineSearch.dir/EngineSearch.cpp.obj	1499679e40c69860
+1	4720	7344731725425875	EngineSearch/CMakeFiles/EngineSearch.dir/src/ConverterJSON.cpp.obj	f0026a2ae9f2a52b
+2	3589	7344732697132590	EngineSearch/CMakeFiles/EngineSearch.dir/EngineSearch.cpp.obj	1499679e40c69860
+3591	4233	7344732703424523	EngineSearch/EngineSearch.exe	93e488b027a9a9c2
