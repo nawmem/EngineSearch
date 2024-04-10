@@ -1,16 +1,27 @@
-﻿# CMakeList.txt: файл проекта CMake верхнего уровня; проведите глобальную конфигурацию
-# и включите сюда подпроекты.
-#
-cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.8)
+project ("EngineSearch")
 
-# Включение горячей перезагрузки для компиляторов MSVC, если поддерживается.
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
+add_executable (
+        EngineSearch
+        src/ConverterJSON.cpp
+        src/Entry.cpp
+        src/InvertedIndex.cpp
+        src/SearchServer.cpp
+        EngineSearch.cpp
+        "include/RelativeIndex.h" "include/ExeptNotFoundFile.h")
+
+if (CMAKE_VERSION VERSION_GREATER 3.12)
+    set_property(TARGET EngineSearch PROPERTY CXX_STANDARD 20)
 endif()
 
-project ("EngineSearch")
-# Включите подпроекты.
-add_subdirectory ("EngineSearch")
+include_directories(
+        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}/nlohmann_json)
+
+
+add_subdirectory(nlohmann_json)
+target_link_libraries(EngineSearch PRIVATE nlohmann_json::nlohmann_json)
+
+#add_subdirectory(./gtest)
 
 
