@@ -5,7 +5,7 @@ go to the directory where the repository was  \
 uploaded and perform the following steps below 
 
 ... \repos > cd EngineSearch/build \
-... \repos\EngineSearch\build> cmake cmake -DCMAKE_BUILD_TYPE=Debug .. \
+... \repos\EngineSearch\build> cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=C:/ninja.exe -DCMAKE_C_COMPILER=C:/mingw64/bin/gcc.exe -DCMAKE_CXX_COMPILER=C:/mingw64/bin/c++.exe -G Ninja .. \
 ... \repos\EngineSearch\build> cmake --build . 
 
 ### Next, go to the directory 
