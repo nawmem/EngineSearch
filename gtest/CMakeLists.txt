@@ -17,11 +17,12 @@ include_directories(
 
 add_executable(
 	EngineSearchTest
-	${CMAKE_SOURCE_DIR}/EngineSearch/src/ConverterJSON.cpp
-	${CMAKE_SOURCE_DIR}/EngineSearch/src/Entry.cpp
-	${CMAKE_SOURCE_DIR}/EngineSearch/src/InvertedIndex.cpp
-	${CMAKE_SOURCE_DIR}/EngineSearch/src/SearchServer.cpp
-	MainTest.cpp)
+	${CMAKE_SOURCE_DIR}/src/ConverterJSON.cpp
+	${CMAKE_SOURCE_DIR}/src/Entry.cpp
+	${CMAKE_SOURCE_DIR}/src/InvertedIndex.cpp
+	${CMAKE_SOURCE_DIR}/src/SearchServer.cpp
+	MainTest.cpp
+)
 
 target_link_libraries(
 	EngineSearchTest

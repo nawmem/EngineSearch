@@ -8,7 +8,7 @@ add_executable (
         src/InvertedIndex.cpp
         src/SearchServer.cpp
         EngineSearch.cpp
-        "include/RelativeIndex.h" "include/ExeptNotFoundFile.h")
+        "include/RelativeIndex.h" "include/ExeptNotFoundFile.h" gtest/MainTest.cpp)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
     set_property(TARGET EngineSearch PROPERTY CXX_STANDARD 20)
@@ -16,12 +16,12 @@ endif()
 
 include_directories(
         ${CMAKE_SOURCE_DIR}/include
-        ${CMAKE_SOURCE_DIR}/nlohmann_json)
+        ${CMAKE_SOURCE_DIR}/nlohmann_json/include)
 
 
 add_subdirectory(nlohmann_json)
 target_link_libraries(EngineSearch PRIVATE nlohmann_json::nlohmann_json)
 
-#add_subdirectory(./gtest)
+add_subdirectory(./gtest)
 
 
