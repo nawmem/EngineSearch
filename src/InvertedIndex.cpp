@@ -33,7 +33,6 @@ void InvertedIndex::UpdateDocumentBase(std::vector<std::string> text_files_input
         std::thread fd_thread([this, &str, &word, &i]()
         {
             // открываем файл
-
             str << this->docs[i];
             while (str >> word)
             {

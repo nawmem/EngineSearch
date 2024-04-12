@@ -12,82 +12,86 @@ using json = nlohmann::json;
 
 int sortListWordAsc
 (
-	std::map<std::string, std::vector<Entry>>& freq_dict, 
+    std::map<std::string, std::vector<Entry>>& freq_dict,
 	std::vector<std::string>& sort_list_word, 
 	std::string& insert_word, 
 	int start, 
 	int end
 )
 {
+
 	int start_pos = start;
 	int end_pos = end;
-	int middle = (end - start) / 2 + start;
-	int count_find_word = 0;			// колличество раз когда вставляемое слово встретилось в документах
-	int count_freq_word = 0;			// колличество раз когда сравнимое слово встретилось в документах
-	int count_freq_word_middle = 0;		// колличество раз когда слово из середины встретилось в документах
-	for (auto current_word : freq_dict[insert_word]) count_find_word += static_cast<int>(current_word.count);
-	
-	// если список пустой то пушим в него первый элемент
-	if (sort_list_word.size() == 0)
-	{
-		sort_list_word.push_back(insert_word);
-		return 0;
-	}
-	else 
-		// тут можем начать высчитывать кол-во совпадений среднего элемента из списка
-		// для дальнейшего сравнения с тем что нужно вставить
-		for (auto current_word_middle : freq_dict[sort_list_word[middle]])
-			count_freq_word_middle += static_cast<int>(current_word_middle.count);
+	int middle = (start + end) / 2;
+	int count_insert_word = 0;			// колличество раз когда вставляемое слово встретилось в документах
+	int count_compare_word = 0;			// колличество раз когда сравнимое слово встретилось в документах
+	int count_middle_word = 0;		// колличество раз когда слово из середины встретилось в документах
 
-	for (auto current_freq_word : freq_dict[sort_list_word[start_pos]]) count_freq_word += static_cast<int>(current_freq_word.count);
-	
-	if (start_pos == end_pos) // тут сравниваем с одним элементом оставшимся от деления массива на пары
-	{
-		if (count_freq_word <= count_find_word) sort_list_word.insert(sort_list_word.begin() + start_pos + 1, insert_word);
-		else if (count_freq_word >= count_find_word) sort_list_word.insert(sort_list_word.begin() + start_pos, insert_word);
-		return 0;
-	}
-	else if ((start_pos + 1) == end_pos) // тут работаем с двумя эелементами оставшимися от деления
-	{
-		if (count_freq_word >= count_find_word) sort_list_word.insert(sort_list_word.begin() + start_pos, insert_word);
-		else if (count_freq_word <= count_find_word) sort_list_word.insert(sort_list_word.begin() + start_pos + 1, insert_word);
-		return 0;
-	}
-	else if (count_freq_word_middle == count_find_word) // вдруг у нас попался равный эелемент то вставляем после него
-	{
-		sort_list_word.insert(sort_list_word.begin() + start_pos + 1, insert_word);
-		return 0;
-	}
-	// ниже в обоих вариантах сравниваем кол-во совпадений центрального элемента
-	// с кол-вом того слова которое нужно вставить
-	// если оно больше или меньше то вызываем рикурсию чтобы разделить массив на пополам
-	// и продолжить поиски
-	else if (count_freq_word_middle < count_find_word)
-		sortListWordAsc(freq_dict, sort_list_word, insert_word, middle, end_pos);
-	else if (count_freq_word_middle > count_find_word)
-		sortListWordAsc(freq_dict, sort_list_word, insert_word, start_pos, middle);
+    if (sort_list_word.size() == 0)
+    {
+        sort_list_word.push_back(insert_word);
+        return 0;
+    }
 
-	return 0;
+    // считаем кол-во совпадния вставляемого слова из списка по всем документам
+    for (auto add_word: freq_dict[insert_word])
+        count_insert_word += add_word.count;
+    // считаем кол-во совпадния среднего слова из списка по всем документам
+    for (auto middle_word: freq_dict[sort_list_word[middle]])
+        count_middle_word += middle_word.count;
+
+    if (start_pos == end_pos)
+    {
+        for (auto compare_word: freq_dict[sort_list_word[start_pos]])
+            count_compare_word += compare_word.count;
+
+        if (sort_list_word[start_pos] == insert_word)
+            return 0;
+        else if (count_insert_word >= count_compare_word)
+        {
+            sort_list_word.insert(sort_list_word.begin() + start_pos + 1, insert_word);
+            return 0;
+        }
+        else if (count_insert_word < count_compare_word )
+        {
+            sort_list_word.insert(sort_list_word.begin() + start_pos, insert_word);
+            return 0;
+        }
+    }
+
+    if (count_insert_word <= count_middle_word) // меньше чем центральный эелемент
+    {
+        sortListWordAsc(freq_dict, sort_list_word, insert_word, start_pos, middle);
+    }
+    else if (count_insert_word > count_middle_word) // больше чем центральный эелемент
+    {
+        sortListWordAsc(freq_dict, sort_list_word, insert_word, middle + 1, end_pos);
+    }
+
+    return 0;
+
+
 }
 
 
 
 void sortRelative(std::vector<RelativeIndex>& relevance, int start, int end)
 {
-	if (start == end) return;					
+	if (start == end) return;
 	int middle = (start + end) / 2;				// определяем середину списка
 												// и рекурсивно вызываем функцию сортировки для каждой половины
+
+    int start_left_point = start;				// начало левого списка
+    int start_right_point = middle + 1;			// начало правого списка
 	sortRelative(relevance, start, middle);
 	sortRelative(relevance, middle + 1, end);
 	std::vector<RelativeIndex> tmp_relevance;
-	int start_left_point = start;				// начало левого списка
-	int start_right_point = middle + 1;			// начало правого списка
 	
 	// перебираем список от 
-	for  (int i = 0; i < end - start + 1 && end < relevance.size() - 1; i++)
+	for (int i = 0; i < end - start + 1; i++)
 	{
-		// добвляем больший RelativeIndex из двух списков либо остаток от первого
-		if ((start_left_point <= middle && relevance[start_left_point].rank > relevance[start_right_point].rank) || start_right_point > end)
+		// добвляем больший экземпляр RelativeIndex из двух списков, либо остаток от первого
+		if (start_right_point > end || ((start_left_point <= middle) && (relevance[start_left_point].rank > relevance[start_right_point].rank)))
 		{
 			tmp_relevance.push_back(relevance[start_left_point]);
 			start_left_point++;
@@ -110,7 +114,6 @@ std::vector<std::vector<RelativeIndex>> SearchServer::Search(const std::vector<s
 	std::map<std::string, std::vector<Entry>> freq_dictionary = _index->GetFreqDictionary();
 	// список уникальных слов запросов
 	std::vector<std::vector<std::string>> uniq_list_words;
-	std::string req_id = "";
 
 	for (int i = 0; i < queries_input.size(); i++)
 	{
@@ -120,7 +123,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::Search(const std::vector<s
 		uniq_list_words.push_back({});
 		while (str_req >> req_word)
 		{
-			sortListWordAsc(freq_dictionary, uniq_list_words[i], req_word, 0, uniq_list_words[i].size());
+			sortListWordAsc(freq_dictionary, uniq_list_words[i], req_word, 0, uniq_list_words[i].size() - 1);
 		}
 	}
 
@@ -140,7 +143,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::Search(const std::vector<s
 			// считаем сколько документов получилось у всех слов одного запроса и так по каждому запросу
 			for (auto current_doc : freq_dictionary[word_request])
 			{
-				// если эелемента нет то просто пушим
+				// если элемента нет то просто пушим
 				// надо найти эелемент и прибавить к нему еще одн значение соответсвия
 				int found_target = 0;							// индекс найденого эелемента
 				bool is_found_target = false;					//найден ли эелемент или нет
@@ -184,23 +187,20 @@ std::vector<std::vector<RelativeIndex>> SearchServer::Search(const std::vector<s
 					max_relevance_number = relevance[found_target].rank;
 			}
 		}
-		// сортируем relevance лист
-		sortRelative(relevance, 0, relevance.size());
 
+        // сортируем relevance лист
+        if (relevance.size() > 0)
+            sortRelative(relevance, 0, relevance.size() - 1);
 
-		// тут это все дело вставляем в requests чтобы потом пеобразовать в json
-		requests.push_back(relevance);
+        //высчитываем относительную релевантность
+        for (auto& c_doc : relevance)
+            c_doc.rank = c_doc.rank / max_relevance_number;
+
+        max_relevance_number = 1; // скидываем максимальное кол-во совпадений
+        // тут это все дело вставляем в requests чтобы потом пеобразовать в json
+        requests.push_back(relevance);
 		relevance.clear();
 	}	
 
-	std::vector<std::vector<RelativeIndex>> reuslt_relative;
-	 //высчитываем относительную релевантность
-	for (auto& current_req : requests)
-	{
-        // это должно быть не тут нужно делить в запросе
-		for (auto& current_doc : current_req) current_doc.rank = current_doc.rank / max_relevance_number;
-		max_relevance_number = 1; // скидываем максимальное кол-во совпадений
-	}
-;
 	return requests;
 }

@@ -68,6 +68,7 @@ TEST(TestCaseInvertedIndex, TestInvertedIndexMissingWord) {
 	const std::vector<std::string> requests = { "m", "statement" };
 	const std::vector<std::vector<Entry>> expected = {
 	{
+
 	}, 
 	{
 		{1, 1}

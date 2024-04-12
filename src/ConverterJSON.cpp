@@ -21,9 +21,8 @@ std::vector<std::string> ConverterJSON::GetTextDocument()
 		config_prj.close();
 		for (std::string current_file : files["files"])
 		{
-
 			// составляем путь для файла в папке resources
-			std::ifstream read_file_res(this->dir_prj + this->src_request);
+			std::ifstream read_file_res("../" + current_file);
 			if (read_file_res.is_open())
 			{
 				// считываем данные из файлов и заполняем список слов
@@ -39,7 +38,7 @@ std::vector<std::string> ConverterJSON::GetTextDocument()
 			else
 				throw ExeptNotFoundFile(this->src_request, this->dir_prj, 77, "ConfigJson");
 
-			
+
 		}
 		return words_files;
 	}

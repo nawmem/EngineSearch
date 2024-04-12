@@ -49,9 +49,9 @@ int main()
 	}
 	
 	// Объект с данными о индексировании документов
-	InvertedIndex* inverted_index = new InvertedIndex();
-	inverted_index->UpdateDocumentBase(all_text_doc);
-
+	InvertedIndex inverted_index;
+	inverted_index.UpdateDocumentBase(all_text_doc);
+    auto iii = inverted_index.GetWordCount("file");
 	// Получаем вектор строк запросов из файла requests.json в директории configs
 	// чтобы далее передать в сервер поиска слов в отиндексированнымх документах
 
@@ -70,9 +70,8 @@ int main()
 		std::cout << msg.GetMessage() << std::endl;
 	}
 
-    auto iii = words_request;
 	// Объект индексации документов, в конструктор которого передаем указатель на объект inverted_index
-	SearchServer search_server(inverted_index);
+	SearchServer search_server(&inverted_index);
 	auto all_request = search_server.Search(words_request);
 	std::vector<std::vector<std::pair<int, float>>> put_answer;
 	for (int i = 0; i < all_request.size(); i++)

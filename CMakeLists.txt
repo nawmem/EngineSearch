@@ -1,4 +1,4 @@
-﻿cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.25)
 project ("EngineSearch")
 
 add_executable (
@@ -8,7 +8,9 @@ add_executable (
         src/InvertedIndex.cpp
         src/SearchServer.cpp
         EngineSearch.cpp
-        "include/RelativeIndex.h" "include/ExeptNotFoundFile.h" gtest/MainTest.cpp)
+        include/RelativeIndex.h
+        include/ExeptNotFoundFile.h
+)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
     set_property(TARGET EngineSearch PROPERTY CXX_STANDARD 20)
@@ -16,7 +18,7 @@ endif()
 
 include_directories(
         ${CMAKE_SOURCE_DIR}/include
-        ${CMAKE_SOURCE_DIR}/nlohmann_json/include)
+        ${CMAKE_SOURCE_DIR}/nlohmann_json)
 
 
 add_subdirectory(nlohmann_json)
