@@ -2,4 +2,3 @@ build/
 cmake-build-debug/
 out/
 .vs/
-nlohmann_json/
