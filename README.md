@@ -152,7 +152,7 @@ DONE
 #### Пример успешных тестов
 <pre>
 ...\repos\EngineSearch\build\gtest>EngineSearchTest.exe
-Running main() from C:/cpp/EngineSearch/build/_deps/googletest-src/googletest/src/gtest_main.cc
+Running main() from .../repos/EngineSearch/build/_deps/googletest-src/googletest/src/gtest_main.cc
 [==========] Running 5 tests from 2 test suites.
 [----------] Global test environment set-up.
 [----------] 3 tests from TestCaseInvertedIndex
