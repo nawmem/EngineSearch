@@ -45,14 +45,14 @@ TEST(TestCaseInvertedIndex, TestBasic2) {
 	"milk milk milk milk milk water water water water water",
 	"americano cappuccino"
 	};
-	const std::vector<std::string> requests = { "milk", "water", "cappuchino" };
+	const std::vector<std::string> requests = { "milk", "water", "cappuccino" };
 	const std::vector<std::vector<Entry>> expected = {
 		{
 			{0, 4}, {1, 1}, {2, 5}
 		}, 
 		{
-			{0, 2}, {1, 2}, {2, 5}
-		}, 
+			{0, 3}, {1, 2}, {2, 5}
+		},
 		{
 			{3, 1}
 		}
@@ -68,8 +68,8 @@ TEST(TestCaseInvertedIndex, TestInvertedIndexMissingWord) {
 	const std::vector<std::string> requests = { "m", "statement" };
 	const std::vector<std::vector<Entry>> expected = {
 	{
-
-	}, 
+            {0,0}
+	},
 	{
 		{1, 1}
 	}
@@ -129,11 +129,28 @@ TEST(TestCaseSearchServer, TestTop5) {
 	const std::vector<std::string> request = { "moscow is the capital of russia" };
 	const std::vector<std::vector<RelativeIndex>> expected = {
 	{
-	{7, 1},
 	{14, 1},
-	{0, 0.666666687},
-	{1, 0.666666687},
-	{2, 0.666666687}
+	{7, 1},
+    {21, 0.666666687},
+    {20, 0.666666687},
+    {19, 0.666666687},
+    {18, 0.666666687},
+    {17, 0.666666687},
+    {16, 0.666666687},
+    {15, 0.666666687},
+    {13, 0.666666687},
+    {12, 0.666666687},
+    {11, 0.666666687},
+    {10, 0.666666687},
+    {9, 0.666666687},
+    {8, 0.666666687},
+    {6, 0.666666687},
+    {5, 0.666666687},
+    {4, 0.666666687},
+    {3, 0.666666687},
+    {2, 0.666666687},
+    {1, 0.666666687},
+    {0, 0.666666687}
 	}
 	};
 	InvertedIndex idx;

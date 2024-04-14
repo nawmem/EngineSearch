@@ -51,12 +51,10 @@ int main()
 	// Объект с данными о индексировании документов
 	InvertedIndex inverted_index;
 	inverted_index.UpdateDocumentBase(all_text_doc);
-    auto iii = inverted_index.GetWordCount("file");
+
 	// Получаем вектор строк запросов из файла requests.json в директории configs
 	// чтобы далее передать в сервер поиска слов в отиндексированнымх документах
-
 	std::vector<std::string> words_request;
-
 	try
 	{
 		readStrRequests(
