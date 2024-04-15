@@ -11,6 +11,7 @@
 > А так-же в директории **"...\repos\EngineSearch\configs"** должны быть 2 файла
 > - configs.json
 > - requests.json
+> - answers.json создается автоматически
 
 #### Пример config.json
 <pre>
@@ -112,6 +113,13 @@
 Находим файл **EngineSearch.exe**
 Открываем его в **консоли**  \
 `...\repos\EngineSearch\build> EngineSearch.exe `
+
+> Если в каталоге "configs" нет файлов **"config"** или **"requests"**, программа сообщит об этом выводом **"ATTENTION:"** в консоли. \
+> **Пример:**
+> <pre>
+> ...\repos\EngineSearch\build\gtest>EngineSearchTest.exe
+> ATTENTION: There is no such file "requests.json" at "...\EngineSearch\configs" 
+> </pre>
 
 В итоге в консоль выйдет слово "DONE" - это ознаечает, что программа выполнена успешно
 
