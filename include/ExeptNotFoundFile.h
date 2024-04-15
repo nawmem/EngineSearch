@@ -9,5 +9,5 @@ public:
 	{
 		this->message = "ATTENTION: There is no such file \"" + in_name_file + " at \"" + in_file_path + "\" " + std::to_string(num_str) + " " + name_file;
 	}
-	std::string GetMessage() const { return this->message; }
+	std::string getMessage() const { return this->message; }
 };

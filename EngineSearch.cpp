@@ -11,7 +11,7 @@
 using json = nlohmann::json;
 
 using namespace std;
-
+// читаем
 void readStrRequests(std::string patch_requests, std::string name_file_requests, std::vector<std::string>& currents_requests)
 {
 	std::ifstream requests_json(patch_requests + name_file_requests);
@@ -40,37 +40,39 @@ int main()
 	std::vector<std::string> all_text_doc = { "" };
 	try
 	{
-		all_text_doc = converter_json.GetTextDocument();
+		all_text_doc = converter_json.getTextDocument();
 	}
 	catch (const ExeptNotFoundFile& msg)
 	{
-		std::cout << msg.GetMessage() << std::endl;
+		std::cout << msg.getMessage() << std::endl;
 		count_errors++;
 	}
-	
+
 	// Объект с данными о индексировании документов
 	InvertedIndex inverted_index;
-	inverted_index.UpdateDocumentBase(all_text_doc);
+	inverted_index.updateDocumentBase(all_text_doc);
 
 	// Получаем вектор строк запросов из файла requests.json в директории configs
 	// чтобы далее передать в сервер поиска слов в отиндексированнымх документах
-	std::vector<std::string> words_request;
-	try
-	{
-		readStrRequests(
-                "../configs/",
-			    "requests.json",
-			    words_request
-		    );
-	}
-	catch (const ExeptNotFoundFile& msg)
-	{
-		std::cout << msg.GetMessage() << std::endl;
-	}
+	std::vector<std::string> words_request = converter_json.getRequest();
+//	try
+//	{
+//		readStrRequests(
+//                "../configs/",
+//			    "requests.json",
+//			    words_request
+//		    );
+//	}
+//
+//	catch (const ExeptNotFoundFile& msg)
+//	{
+//		std::cout << msg.getMessage() << std::endl;
+//	}
 
 	// Объект индексации документов, в конструктор которого передаем указатель на объект inverted_index
 	SearchServer search_server(&inverted_index);
-	auto all_request = search_server.Search(words_request);
+    search_server.setResponseLimit(converter_json.getResponseLimit());
+	auto all_request = search_server.search(words_request);
 	std::vector<std::vector<std::pair<int, float>>> put_answer;
 	for (int i = 0; i < all_request.size(); i++)
 	{

@@ -25,23 +25,23 @@ public:
      * метод получения содержимого документа
      * @return спиок с содежимым файлов
      */
-    std::vector<std::string> GetTextDocument();
+    std::vector<std::string> getTextDocument();
 
     /**
      * @return возвращает колличество ответов на один запрос
      */
-    int GetResponseLimit();
+    int getResponseLimit();
 
     /**
      * Получает запросы из файла request
      * @return список запросов из файла
      */
-    std::vector<std::string> GetRequest();
+    std::vector<std::string> getRequest();
 
     /**
      * Ложит в файл answer результат поисковых запросов
      */
-    void PutAnswer(std::vector<std::vector<std::pair<int, float>>> answer);
+    void putAnswer(std::vector<std::vector<std::pair<int, float>>> answer);
 };
 
 

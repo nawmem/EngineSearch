@@ -7,6 +7,7 @@
 #include "../include/SearchServer.h"
 #include "../include/RelativeIndex.h"
 #include "../include/Entry.h"
+#include "ConverterJSON.h"
 
 using json = nlohmann::json;
 
@@ -73,8 +74,6 @@ int sortListWordAsc
 
 }
 
-
-
 void sortRelative(std::vector<RelativeIndex>& relevance, int start, int end)
 {
 	if (start == end) return;
@@ -108,13 +107,19 @@ void sortRelative(std::vector<RelativeIndex>& relevance, int start, int end)
 		relevance[i + start] = tmp_relevance[i];
 }
 
+void SearchServer::setResponseLimit(int in_limit)
+{
+    if (in_limit > 0) this->response_limit = in_limit;
+}
 
-std::vector<std::vector<RelativeIndex>> SearchServer::Search(const std::vector<std::string>& queries_input)
+std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string>& queries_input)
 {
 	std::map<std::string, std::vector<Entry>> freq_dictionary = _index->GetFreqDictionary();
 	// список уникальных слов запросов
 	std::vector<std::vector<std::string>> uniq_list_words;
-
+//    ConverterJSON* converter_json_s = new ConverterJSON;
+//    int response_limit = converter_json_s->GetResponseLimit();
+//    delete converter_json_s;
 	for (int i = 0; i < queries_input.size(); i++)
 	{
 		std::stringstream str_req(queries_input[i]);
@@ -135,62 +140,58 @@ std::vector<std::vector<RelativeIndex>> SearchServer::Search(const std::vector<s
 	std::vector<std::vector<RelativeIndex>> return_vector_relative_index = {};	 // вектор который будем возвращать в итоге 
 
 	// получаем вектора запросов в которых хранятся отсортированные слова по возрастанию совпадений
-	for (auto id_request : uniq_list_words) 
+	for (auto& id_request : uniq_list_words)//(auto id_request : uniq_list_words)
 	{
 		size_t count_doc = 0;
-		for (auto word_request : id_request) // получили слово из запроса
+		for (auto& word_request : id_request) // получили слово из запроса
 		{
 			// считаем сколько документов получилось у всех слов одного запроса и так по каждому запросу
-			for (auto current_doc : freq_dictionary[word_request])
+			for (auto& current_doc : freq_dictionary[word_request])
 			{
-				// если элемента нет то просто пушим
-				// надо найти эелемент и прибавить к нему еще одн значение соответсвия
-				int found_target = 0;							// индекс найденого эелемента
-				bool is_found_target = false;					//найден ли эелемент или нет
-				for (int i = 0; i < relevance.size(); i++)
-				{
-					// ищем есть ли в списке уже этот документ
-					// и записываем его номер в списке
-					int id_rel_index = relevance[i].doc_id;
-					if (id_rel_index == current_doc.doc_id)
-					{
-						found_target = i;
-						is_found_target = true;
-						break;
-					}
-					
-					else
-					{
-						is_found_target = false;
-						found_target = i;
-					}
-				}
-					
-				// если размер списка ноль или документ не найден
-				// мы добавляем в конец новый документ
-				// если есть такой то прибавляем кол-во совпадений по документу
-				if (relevance.size() == 0 || is_found_target == false )
-				{
-					RelativeIndex tmp_rel_index;
-					tmp_rel_index.doc_id = current_doc.doc_id;
-					tmp_rel_index.rank = current_doc.count;
-					relevance.push_back(tmp_rel_index);
-				}
-				else
-				{
-					relevance[found_target].rank += current_doc.count;
-				}
-					
 
-				// устанавливаем максимум для расчета относительной релевантности
-				if (max_relevance_number < relevance[found_target].rank)
-					max_relevance_number = relevance[found_target].rank;
+                // если элемента нет то просто пушим
+                // надо найти эелемент и прибавить к нему еще одн значение соответсвия
+                int found_target = 0;                            // индекс найденого эелемента
+                bool is_found_target = false;                    //найден ли эелемент или нет
+                for (int i = 0; i < relevance.size() && i < 5 ; i++) {
+                    // ищем есть ли в списке уже этот документ
+                    // и записываем его номер в списке
+                    int id_rel_index = relevance[i].doc_id;
+                    if (id_rel_index == current_doc.doc_id) {
+                        found_target = i;
+                        is_found_target = true;
+                        break;
+                    } else {
+                        is_found_target = false;
+                        found_target = i;
+                    }
+                }
+
+                // если размер списка ноль или документ не найден
+                // мы добавляем в конец новый документ
+                // если есть такой то прибавляем кол-во совпадений по документу
+                if (relevance.size() == 0 || is_found_target == false) {
+                    RelativeIndex tmp_rel_index;
+                    tmp_rel_index.doc_id = current_doc.doc_id;
+                    tmp_rel_index.rank = current_doc.count;
+                    relevance.push_back(tmp_rel_index);
+                } else {
+                    relevance[found_target].rank += current_doc.count;
+                }
+
+
+                // устанавливаем максимум для расчета относительной релевантности
+                if (max_relevance_number < relevance[found_target].rank)
+                    max_relevance_number = relevance[found_target].rank;
+
 			}
 		}
 
         // сортируем relevance лист
         if (relevance.size() > 0)
             sortRelative(relevance, 0, relevance.size() - 1);
+        // обрезаем выдачу до лимита ответов на запрос
+        if (relevance.size() >= this->response_limit) relevance.resize(this->response_limit);
 
         //высчитываем относительную релевантность
         for (auto& c_doc : relevance)

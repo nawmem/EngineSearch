@@ -23,14 +23,14 @@ public:
     * Обновить или заполнить базу документов, в которой совершаем поиск
     * @param docs_input содежимое документов
     */
-    void UpdateDocumentBase(std::vector<std::string> docs_input);
+    void updateDocumentBase(std::vector<std::string> docs_input);
 
     /**
      * Метод определяет вхождений слова в загруженной базе
      * @param word - искомое слово
      * @return список вхождений с частотой слов
      */
-    std::vector<Entry> GetWordCount(std::string word);
+    std::vector<Entry> getWordCount(std::string word);
 
     std::map<std::string, std::vector<Entry>> GetFreqDictionary()
     {

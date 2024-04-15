@@ -7,7 +7,7 @@
 
 
 
-std::vector<std::string> ConverterJSON::GetTextDocument()
+std::vector<std::string> ConverterJSON::getTextDocument()
 {
 	std::string word;
 	std::string tmp_str;
@@ -47,7 +47,7 @@ std::vector<std::string> ConverterJSON::GetTextDocument()
 	return words_files;
 }
 
-int ConverterJSON::GetResponseLimit()
+int ConverterJSON::getResponseLimit()
 {
 	json count_response;
 	// считываем из конфига максимальное кол-во запросов
@@ -62,7 +62,7 @@ int ConverterJSON::GetResponseLimit()
 	return 0;
 }
 
-std::vector<std::string> ConverterJSON::GetRequest()
+std::vector<std::string> ConverterJSON::getRequest()
 {
 	std::vector<std::string> requests;
 	// считываем запросы из файла реквест
@@ -80,7 +80,7 @@ std::vector<std::string> ConverterJSON::GetRequest()
 
 
 // а тут происходит магия перевоплащения в json )) и сохранение результатов в answers.json
-void ConverterJSON::PutAnswer(std::vector<std::vector<std::pair<int, float>>> answer)
+void ConverterJSON::putAnswer(std::vector<std::vector<std::pair<int, float>>> answer)
 {
 	json answers = { };		// это результат который будем записывать в answers.json
 	for (int i = 0; i < answer.size(); i++)

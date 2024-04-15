@@ -10,7 +10,7 @@
 
 using json = nlohmann::json;
 
-void InvertedIndex::UpdateDocumentBase(std::vector<std::string> text_files_input) {
+void InvertedIndex::updateDocumentBase(std::vector<std::string> text_files_input) {
 
     // получаем кол-во слов
     size_t count_files = text_files_input.size(); 
@@ -78,7 +78,7 @@ void InvertedIndex::UpdateDocumentBase(std::vector<std::string> text_files_input
     }
 }
 
-std::vector<Entry> InvertedIndex::GetWordCount(std::string word)
+std::vector<Entry> InvertedIndex::getWordCount(std::string word)
 {
     for (auto docs: this->freq_dictionary)
     {

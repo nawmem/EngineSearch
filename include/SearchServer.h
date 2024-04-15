@@ -5,6 +5,7 @@ class SearchServer
 {
 
 	InvertedIndex* _index;
+    int response_limit = 0;
 
 public:
 	/**
@@ -14,6 +15,12 @@ public:
 	* 
 	*/
 	SearchServer(InvertedIndex* idx) : _index(idx) { };
+    /**
+	* ƒобавил метод записи в свойство "response_limit" лимита колличества документов на каждый запрос
+	* @param in_limit лимит запросов вз€тый из файла config.json
+	* @return ничего не возвращает
+	*/
+    void setResponseLimit(int in_limit);
 
 	/**
 	* ћетодо обработки поисковыъ запросов
@@ -21,6 +28,6 @@ public:
 	* @return возвоащает отсортированный список релевантных ответов дл€ заданных запросов
 	*/
 
-	std::vector<std::vector<RelativeIndex>> Search(const std::vector<std::string>& queries_input);
+	std::vector<std::vector<RelativeIndex>> search(const std::vector<std::string>& queries_input);
 
 };
