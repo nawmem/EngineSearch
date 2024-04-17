@@ -2,7 +2,7 @@
   "config": {
     "name": "SearchEngine",
     "version": "0.1",
-    "max_response": 2
+    "max_response": 10
   },
   "files": [
     "resources/file001.txt",
