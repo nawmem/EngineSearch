@@ -69,7 +69,8 @@ std::vector<std::string> ConverterJSON::getRequest()
 	std::ifstream requests_prj(this->dir_prj + this->src_request);
 	if (requests_prj.is_open())
 	{
-		for (std::string current_req : json::parse(requests_prj)["requests"])
+        json str_request = json::parse(requests_prj);
+		for (std::string current_req : str_request["requests"])
 			requests.push_back(current_req);
 	}
 	else

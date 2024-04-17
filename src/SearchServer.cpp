@@ -117,9 +117,6 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
 	std::map<std::string, std::vector<Entry>> freq_dictionary = _index->GetFreqDictionary();
 	// список уникальных слов запросов
 	std::vector<std::vector<std::string>> uniq_list_words;
-//    ConverterJSON* converter_json_s = new ConverterJSON;
-//    int response_limit = converter_json_s->GetResponseLimit();
-//    delete converter_json_s;
 	for (int i = 0; i < queries_input.size(); i++)
 	{
 		std::stringstream str_req(queries_input[i]);
@@ -191,7 +188,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
         if (relevance.size() > 0)
             sortRelative(relevance, 0, relevance.size() - 1);
         // обрезаем выдачу до лимита ответов на запрос
-        if (relevance.size() >= this->response_limit) relevance.resize(this->response_limit);
+        if (relevance.size() > this->response_limit) relevance.resize(this->response_limit);
 
         //высчитываем относительную релевантность
         for (auto& c_doc : relevance)
