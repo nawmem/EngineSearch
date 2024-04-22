@@ -2,11 +2,10 @@
 // Created by user on 13.02.2024.
 //
 
-#include "../include/InvertedIndex.h"
 #include <fstream>
 #include <sstream>
 #include "nlohmann/json.hpp"
-#include "../include/Entry.h"
+#include "../include/InvertedIndex.h"
 
 using json = nlohmann::json;
 
