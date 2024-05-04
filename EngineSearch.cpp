@@ -1,6 +1,7 @@
-﻿
-// EngineSearch.cpp: определяет точку входа для приложения.
+﻿//
+// Created by user on 13.02.2024.
 //
+
 
 #include "EngineSearch.h"
 #include <nlohmann/json.hpp>
@@ -11,26 +12,27 @@
 using json = nlohmann::json;
 
 using namespace std;
-// читаем
-void readStrRequests(std::string patch_requests, std::string name_file_requests, std::vector<std::string>& currents_requests)
-{
-	std::ifstream requests_json(patch_requests + name_file_requests);
 
-	if (requests_json.is_open())
-	{
-		json read_word_req = json::parse(requests_json);
-
-		for (std::string str_words_req : read_word_req["requests"])
-		{
-			currents_requests.push_back(str_words_req);
-		}
-        requests_json.close();
-	}
-	else
-	{
-		throw ExeptNotFoundFile(name_file_requests, patch_requests, 32, "EngineSearch");
-	}
-}
+// читаем строки запросов
+//void readStrRequests(std::string patch_requests, std::string name_file_requests, std::vector<std::string>& currents_requests)
+//{
+//	std::ifstream requests_json(patch_requests + name_file_requests);
+//
+//	if (requests_json.is_open())
+//	{
+//		json read_word_req = json::parse(requests_json);
+//
+//		for (std::string str_words_req : read_word_req["requests"])
+//		{
+//			currents_requests.push_back(str_words_req);
+//		}
+//        requests_json.close();
+//	}
+//	else
+//	{
+//		throw ExeptNotFoundFile(name_file_requests, patch_requests, 32, "EngineSearch");
+//	}
+//}
 
 int main()
 {
@@ -58,7 +60,8 @@ int main()
 
 	// Объект индексации документов, в конструктор которого передаем указатель на объект inverted_index
 	SearchServer search_server(&inverted_index);
-    search_server.setResponseLimit(converter_json.getResponseLimit());
+    int limit_request_response = converter_json.getResponseLimit();
+    search_server.setResponseLimit(limit_request_response);
 	auto all_request = search_server.search(words_request);
 	std::vector<std::vector<std::pair<int, float>>> put_answer;
 	for (int i = 0; i < all_request.size(); i++)

@@ -107,7 +107,7 @@ void sortRelative(std::vector<RelativeIndex>& relevance, int start, int end)
 		relevance[i + start] = tmp_relevance[i];
 }
 
-void SearchServer::setResponseLimit(int in_limit)
+void SearchServer::setResponseLimit(int &in_limit)
 {
     if (in_limit > 0) this->response_limit = in_limit;
 }

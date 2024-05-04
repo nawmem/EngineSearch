@@ -20,7 +20,7 @@ public:
 	* @param in_limit лимит запросов взятый из файла config.json
 	* @return ничего не возвращает
 	*/
-    void setResponseLimit(int in_limit);
+    void setResponseLimit(int &in_limit);
 
 	/**
 	* Методо обработки поисковыъ запросов
