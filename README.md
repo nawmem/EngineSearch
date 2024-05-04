@@ -93,7 +93,7 @@
 ### **Компилируем проект**
 `...\repos\EngineSearch\build> cmake --build . `
 
-Если все прошло успешно то в консоли вы увидите  \
+Если все прошло успешно то в консоли вы увидите
 <pre>
 ...\repos\EngineSearch\build>cmake --build .
 [20/20] Linking CXX executable gtest\EngineSearchTest.exe
