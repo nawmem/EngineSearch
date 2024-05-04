@@ -83,11 +83,11 @@
 -- Check for working CXX compiler: C:/mingw64/bin/c++.exe - skipped
 -- Detecting CXX compile features
 -- Detecting CXX compile features - done
--- Using the multi-header code from C:/cpp/EngineSearch/nlohmann_json/include/
+-- Using the multi-header code from .../EngineSearch/nlohmann_json/include/
 -- Could NOT find Python (missing: Python_EXECUTABLE Interpreter)
 -- Configuring done (9.2s)
 -- Generating done (0.0s)
--- Build files have been written to: C:/cpp/EngineSearch/build
+-- Build files have been written to: .../EngineSearch/build
 </pre>
 
 ### **Компилируем проект**
