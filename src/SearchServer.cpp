@@ -116,7 +116,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
 {
 	std::map<std::string, std::vector<Entry>> freq_dictionary = _index->GetFreqDictionary();
 	// список уникальных слов запросов
-	std::vector<std::vector<std::string>> uniq_list_words;
+ 	std::vector<std::vector<std::string>> uniq_list_words;
 	for (int i = 0; i < queries_input.size(); i++)
 	{
 		std::stringstream str_req(queries_input[i]);

@@ -73,7 +73,7 @@ void InvertedIndex::updateDocumentBase(std::vector<std::string> text_files_input
         fd_thread.join();
         this->m_docs.unlock();
         // ждем завершения потоков
-        
+        std::cout << "ASD";
     }
 }
 

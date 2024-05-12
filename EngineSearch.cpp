@@ -2,7 +2,6 @@
 // Created by user on 13.02.2024.
 //
 
-
 #include "EngineSearch.h"
 #include <nlohmann/json.hpp>
 #include "include/InvertedIndex.h"
@@ -13,26 +12,6 @@ using json = nlohmann::json;
 
 using namespace std;
 
-// читаем строки запросов
-//void readStrRequests(std::string patch_requests, std::string name_file_requests, std::vector<std::string>& currents_requests)
-//{
-//	std::ifstream requests_json(patch_requests + name_file_requests);
-//
-//	if (requests_json.is_open())
-//	{
-//		json read_word_req = json::parse(requests_json);
-//
-//		for (std::string str_words_req : read_word_req["requests"])
-//		{
-//			currents_requests.push_back(str_words_req);
-//		}
-//        requests_json.close();
-//	}
-//	else
-//	{
-//		throw ExeptNotFoundFile(name_file_requests, patch_requests, 32, "EngineSearch");
-//	}
-//}
 
 int main()
 {
@@ -56,7 +35,7 @@ int main()
 
 	// Получаем вектор строк запросов из файла requests.json в директории configs
 	// чтобы далее передать в сервер поиска слов в отиндексированнымх документах
-	std::vector<std::string> words_request = converter_json.getRequest();;
+	std::vector<std::string> words_request = converter_json.getRequest();
 
 	// Объект индексации документов, в конструктор которого передаем указатель на объект inverted_index
 	SearchServer search_server(&inverted_index);
@@ -73,7 +52,6 @@ int main()
 			put_answer[i].push_back(std::pair<int, float>( { current_doc.doc_id, current_doc.rank }));
 		}
 	}
-
 	// записываем рузельтат в answers.json
 	converter_json.putAnswer(put_answer);
 
