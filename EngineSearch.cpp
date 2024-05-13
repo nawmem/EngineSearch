@@ -18,7 +18,7 @@ int main()
 	size_t count_errors = 0;
 	// получаем объект данных из файлов json в директории configs
 	ConverterJSON converter_json;
-	std::vector<std::string> all_text_doc = { "" };
+	std::vector<std::string> all_text_doc;
 	try
 	{
 		all_text_doc = converter_json.getTextDocument();
