@@ -27,24 +27,26 @@ std::vector<std::string> ConverterJSON::getTextDocument()
 			{
 				// считываем данные из файлов и заполняем список слов
 				tmp_str = "";
-				while (read_file_res >> word)
+                size_t count_char_doc = 0;
+				while (count_char_doc < 1000 && read_file_res >> word)
 				{
+                    if (word.size() > 100) continue;
 					if (tmp_str.size() == 0) tmp_str += word;
 					else tmp_str += (" " + word);
+                    count_char_doc++;
 				}
 				words_files.push_back(tmp_str);
 				read_file_res.close();
 			}
 			else
-				throw ExeptNotFoundFile(this->src_request, this->dir_prj, 77, "ConfigJson");
+				throw ExeptNotFoundFile(this->src_request, this->dir_prj);
 
 
 		}
 		return words_files;
 	}
 	else
-		throw ExeptNotFoundFile(this->src_config, this->dir_prj, 84, "ConfigJson");
-	return words_files;
+		throw ExeptNotFoundFile(this->src_config, this->dir_prj);
 }
 
 int ConverterJSON::getResponseLimit()
@@ -58,8 +60,9 @@ int ConverterJSON::getResponseLimit()
 		return count_response["config"]["max_response"];
 	}
 	else
-		throw ExeptNotFoundFile(this->src_config, this->dir_prj, 99, "ConfigJson");
-	return 0;
+    {
+        throw ExeptNotFoundFile(this->src_config, this->dir_prj);
+    }
 }
 
 std::vector<std::string> ConverterJSON::getRequest()
@@ -74,7 +77,7 @@ std::vector<std::string> ConverterJSON::getRequest()
 			requests.push_back(current_req);
 	}
 	else
-		throw ExeptNotFoundFile(this->src_request, this->dir_prj, 114, "ConfigJson");
+		throw ExeptNotFoundFile(this->src_request, this->dir_prj);
 
 	return requests;
 }
@@ -134,6 +137,6 @@ void ConverterJSON::putAnswer(std::vector<std::vector<std::pair<int, float>>> an
 	std::ofstream input_answers(this->dir_prj + src_answers, std::ios::out);
 	if (input_answers.is_open()) input_answers << answers;
 	else
-		throw ExeptNotFoundFile(this->src_answers, this->dir_prj, 174, "ConfigJson");
+		throw ExeptNotFoundFile(this->src_answers, this->dir_prj);
 	input_answers.close();
 }

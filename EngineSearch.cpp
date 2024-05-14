@@ -19,8 +19,15 @@ int main()
 	// получаем объект данных из файлов json в директории configs
 	ConverterJSON converter_json;
 	std::vector<std::string> all_text_doc;
-    all_text_doc = converter_json.getTextDocument();
-
+	try
+	{
+		all_text_doc = converter_json.getTextDocument();
+	}
+	catch (const ExeptNotFoundFile& msg)
+	{
+		std::cout << msg.getMessage() << std::endl;
+		count_errors++;
+	}
 
 	// Объект с данными об индексировании документов
 	InvertedIndex inverted_index;
@@ -28,7 +35,17 @@ int main()
 
 	// Получаем вектор строк запросов из файла requests.json в директории configs
 	// чтобы далее передать в сервер поиска слов в отиндексированнымх документах
-	std::vector<std::string> words_request = converter_json.getRequest();
+    std::vector<std::string> words_request;
+    try
+    {
+        words_request = converter_json.getRequest();
+    }
+    catch (const ExeptNotFoundFile& msg)
+    {
+        std::cout << msg.getMessage() << std::endl;
+        count_errors++;
+    }
+
 
 	// Объект индексации документов, в конструктор которого передаем указатель на объект inverted_index
 	SearchServer search_server(&inverted_index);
