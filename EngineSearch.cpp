@@ -19,17 +19,10 @@ int main()
 	// получаем объект данных из файлов json в директории configs
 	ConverterJSON converter_json;
 	std::vector<std::string> all_text_doc;
-	try
-	{
-		all_text_doc = converter_json.getTextDocument();
-	}
-	catch (const ExeptNotFoundFile& msg)
-	{
-		std::cout << msg.getMessage() << std::endl;
-		count_errors++;
-	}
+    all_text_doc = converter_json.getTextDocument();
 
-	// Объект с данными о индексировании документов
+
+	// Объект с данными об индексировании документов
 	InvertedIndex inverted_index;
 	inverted_index.updateDocumentBase(all_text_doc);
 
@@ -46,7 +39,7 @@ int main()
 	for (int i = 0; i < all_request.size(); i++)
 	{
 		auto& current_req = all_request[i];
-		put_answer.push_back({});
+		put_answer.emplace_back();
 		for (auto& current_doc: current_req)
 		{
 			put_answer[i].push_back(std::pair<int, float>( { current_doc.doc_id, current_doc.rank }));
@@ -56,9 +49,14 @@ int main()
 	converter_json.putAnswer(put_answer);
 
 	if (count_errors > 0)
-		std::cout << "Обратите внимание на предупреждения показанные в консоли.\n Если они имеются исправьте их и запустите программу заново.\n Программа с ошибками и предупреждениями не сможет выдать итоговый результат.";
-	else
-		std::cout << "DONE";
+    {
+        std::cout << "Обратите внимание на предупреждения показанные в консоли.\n Если они имеются исправьте их и запустите программу заново.\n Программа с ошибками и предупреждениями не сможет выдать итоговый результат.";
+        return 1;
+    }
+    else
+    {
+        std::cout << "DONE";
+        return 0;
+    }
 
-	return 0;
 }
